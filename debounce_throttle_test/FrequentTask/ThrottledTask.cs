@@ -20,16 +20,18 @@ namespace debounce_throttle_test.FrequentTask
             cts = new CancellationTokenSource();
             tcs = new TaskCompletionSource<bool>();
             stopwatch = new Stopwatch();
+            manualCancel = false;
         }
 
         public abstract Task ExecutableTask(CancellationToken token);
 
-        private Stopwatch stopwatch;
-        private long frequencyLimitMillis;
+        private readonly Stopwatch stopwatch;
+        private readonly long frequencyLimitMillis;
+        private readonly TaskCompletionSource<bool> tcs;
+
         private Task runningTask;
-        private CancellationTokenSource cts;
-        private TaskCompletionSource<bool> tcs;
-        private bool manualCancel = false;
+        private CancellationTokenSource cts;        
+        private bool manualCancel;
 
         /// <summary>
         /// Cancel execution of the currently running task and reject any future invocations

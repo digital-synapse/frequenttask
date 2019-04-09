@@ -10,17 +10,25 @@ namespace debounce_throttle_test
 {
     public class TestThrottledTask : ThrottledTask
     {
-        public TestThrottledTask() : base(250) {}
+        public TestThrottledTask() : base(500) {}
 
         public override async Task ExecutableTask(CancellationToken token)
-        {            
-            for (var i = 0; i < 10; i++)
+        {
+            ConsoleAsync.WriteAt("Throttle                                                                                                     ", 0, 2);
+            for (var i = 0; i < 50; i++)
             {
                 if (token.IsCancellationRequested)
                     token.ThrowIfCancellationRequested();
+                else
+                {
+                    if (i == 9)
+                        ConsoleAsync.WriteAt("|-", 9 + i, 2);
+                    else
+                        ConsoleAsync.WriteAt("->", 9 + i, 2);
 
-                await Task.Delay(100);
-                Console.Write(i + " ");
+                    await Task.Delay(50);
+
+                }
             }
         }
     }

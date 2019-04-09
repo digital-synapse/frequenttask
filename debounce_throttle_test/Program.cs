@@ -13,27 +13,20 @@ namespace debounce_throttle_test
     {
 
         static void Main(string[] args)
-        {            
-            runTest("Throttled Task Test", new TestThrottledTask())
-                .ContinueWith(x=> runTest("Debounced Task Test", new TestDebouncedTask())
-                .ContinueWith(t => {
-                     Console.WriteLine();
-                     Console.WriteLine("Press any key...");                     
-                 }));
-
-            Console.ReadKey(); // block UI thread
-        }
-
-        private static async Task runTest(string description, IFrequentTask frequentTask)
         {
-            Console.WriteLine("\n"+description);
-            Console.WriteLine("--------------------------------------------");
-            for (var i = 0; i < 5; i++)
+            Console.CursorVisible = false;
+            Console.Write("Press any key to trigger, Escape to quit...");
+
+            var tTest = new TestThrottledTask();
+            var dTest = new TestDebouncedTask();
+
+            ConsoleKeyInfo key = new ConsoleKeyInfo();
+            while (key.Key != ConsoleKey.Escape)
             {
-                await Task.Delay(100 * i);
-                var bg = frequentTask.Execute().ContinueWith(t => { Console.WriteLine(t.Result); });
+                var bgtask1 = tTest.Execute().ContinueWith(t => ConsoleAsync.WriteAt(t.Result.ToString(),61, 2) );
+                var bgtask2= dTest.Execute().ContinueWith(t => ConsoleAsync.WriteAt(t.Result.ToString(), 61, 3) );
+                key = Console.ReadKey();
             }
-            await frequentTask.Completion;
         }        
     }
 }

@@ -10,17 +10,20 @@ namespace debounce_throttle_test
 {
     public class TestDebouncedTask : DebouncedTask
     {
-        public TestDebouncedTask() : base(250) {}
+        public TestDebouncedTask() : base(500) {}
 
         public override async Task ExecutableTask(CancellationToken token)
-        {            
-            for (var i = 0; i < 10; i++)
+        {
+            ConsoleAsync.WriteAt("Debounce                                                                                                     ", 0, 3);
+            for (var i = 0; i < 50; i++)
             {
                 if (token.IsCancellationRequested)
                     token.ThrowIfCancellationRequested();
-
-                await Task.Delay(50);
-                Console.Write(i + " ");
+                else
+                {
+                    ConsoleAsync.WriteAt("->", 9 + i, 3);
+                    await Task.Delay(50);
+                }
             }
         }
     }
